@@ -14,16 +14,15 @@ namespace TPCWare.MobileResourcesGenerator.ConsoleApp
             string targetRootDir = (args.Length > 2) ? Path.GetFullPath(args[2]) : sourceRootDir;
 
             // Create the out folders structure if not already present
-            Directory.CreateDirectory($"{targetRootDir}/out");
-            Directory.CreateDirectory($"{targetRootDir}/out/iOS");
-            Directory.CreateDirectory($"{targetRootDir}/out/iOS/Resources");
-            Directory.CreateDirectory($"{targetRootDir}/out/Android");
-            Directory.CreateDirectory($"{targetRootDir}/out/Android/Resources");
-            Directory.CreateDirectory($"{targetRootDir}/out/Android/Resources/drawable");
-            Directory.CreateDirectory($"{targetRootDir}/out/Android/Resources/drawable-hdpi");
-            Directory.CreateDirectory($"{targetRootDir}/out/Android/Resources/drawable-xhdpi");
-            Directory.CreateDirectory($"{targetRootDir}/out/Android/Resources/drawable-xxhdpi");
-            Directory.CreateDirectory($"{targetRootDir}/out/Android/Resources/drawable-xxxhdpi");
+            Directory.CreateDirectory($"{targetRootDir}/iOS");
+            Directory.CreateDirectory($"{targetRootDir}/iOS/Resources");
+            Directory.CreateDirectory($"{targetRootDir}/Android");
+            Directory.CreateDirectory($"{targetRootDir}/Android/Resources");
+            Directory.CreateDirectory($"{targetRootDir}/Android/Resources/drawable");
+            Directory.CreateDirectory($"{targetRootDir}/Android/Resources/drawable-hdpi");
+            Directory.CreateDirectory($"{targetRootDir}/Android/Resources/drawable-xhdpi");
+            Directory.CreateDirectory($"{targetRootDir}/Android/Resources/drawable-xxhdpi");
+            Directory.CreateDirectory($"{targetRootDir}/Android/Resources/drawable-xxxhdpi");
 
             Console.WriteLine($"Source dir: {sourceRootDir}");
 
@@ -95,28 +94,28 @@ namespace TPCWare.MobileResourcesGenerator.ConsoleApp
                 switch (toResolution)
                 {
                     case Resolution.Pixel:
-                        targetFilepath = $"{targetRootDir}/out/iOS/Resources/{sourceFileName}";
+                        targetFilepath = $"{targetRootDir}/iOS/Resources/{sourceFileName}";
                         break;
                     case Resolution.Pixel2:
-                        targetFilepath = $"{targetRootDir}/out/iOS/Resources/{sourceFileNameWithoutExtension}@2x{sourceFileNameExtension}";
+                        targetFilepath = $"{targetRootDir}/iOS/Resources/{sourceFileNameWithoutExtension}@2x{sourceFileNameExtension}";
                         break;
                     case Resolution.Pixel3:
-                        targetFilepath = $"{targetRootDir}/out/iOS/Resources/{sourceFileNameWithoutExtension}@3x{sourceFileNameExtension}";
+                        targetFilepath = $"{targetRootDir}/iOS/Resources/{sourceFileNameWithoutExtension}@3x{sourceFileNameExtension}";
                         break;
                     case Resolution.Mdpi:
-                        targetFilepath = $"{targetRootDir}/out/Android/Resources/drawable/{sourceFileName}";
+                        targetFilepath = $"{targetRootDir}/Android/Resources/drawable/{sourceFileName}";
                         break;
                     case Resolution.Hdpi:
-                        targetFilepath = $"{targetRootDir}/out/Android/Resources/drawable-hdpi/{sourceFileName}";
+                        targetFilepath = $"{targetRootDir}/Android/Resources/drawable-hdpi/{sourceFileName}";
                         break;
                     case Resolution.Xhdpi:
-                        targetFilepath = $"{targetRootDir}/out/Android/Resources/drawable-xhdpi/{sourceFileName}";
+                        targetFilepath = $"{targetRootDir}/Android/Resources/drawable-xhdpi/{sourceFileName}";
                         break;
                     case Resolution.Xxhdpi:
-                        targetFilepath = $"{targetRootDir}/out/Android/Resources/drawable-xxhdpi/{sourceFileName}";
+                        targetFilepath = $"{targetRootDir}/Android/Resources/drawable-xxhdpi/{sourceFileName}";
                         break;
                     case Resolution.Xxxhdpi:
-                        targetFilepath = $"{targetRootDir}/out/Android/Resources/drawable-xxxhdpi/{sourceFileName}";
+                        targetFilepath = $"{targetRootDir}/Android/Resources/drawable-xxxhdpi/{sourceFileName}";
                         break;
                     default:
                         throw new ArgumentException();
