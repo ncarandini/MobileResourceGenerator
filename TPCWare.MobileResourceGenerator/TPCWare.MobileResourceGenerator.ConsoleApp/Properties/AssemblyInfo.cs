@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TPCWare.MobileResourceGenerator.ConsoleApp")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("MoReGen")]
+[assembly: AssemblyDescription("Mobile Resource Generator")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TPCWare.MobileResourceGenerator.ConsoleApp")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyProduct("TPCWare.MobileResourceGenerator")]
+[assembly: AssemblyCopyright("Copyright ©  2018 Nicolò Carandini")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -7,7 +7,7 @@
     <ProjectGuid>{981BB63A-473C-442C-B568-F2E2B93C43EC}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>TPCWare.MobileResourceGenerator.ConsoleApp</RootNamespace>
-    <AssemblyName>TPCWare.MobileResourceGenerator.ConsoleApp</AssemblyName>
+    <AssemblyName>MoReGen</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
