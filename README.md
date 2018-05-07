@@ -32,7 +32,7 @@ where:
 On the target folder, if non already present, the command will create the folder structure needed to contain the generated artifacts.
 
 ## Example
-As an example, lets suppose you have two images on a test folder (i.e. Desktop/Test):
+As an example, lets suppose you have three images on a test folder (i.e. Desktop/Test):
 
 ![image](https://user-images.githubusercontent.com/139274/39706997-64c957da-5213-11e8-90ad-321610ce9a03.png)
 
@@ -40,7 +40,9 @@ Now open a command windows and set the current directory to the folder where the
 
 ![image](https://user-images.githubusercontent.com/139274/39707445-c01c5e24-5214-11e8-9c46-b089f4aad2dc.png)
 
-Et voilà, now you can find two new folders, named "iOS" and "Android", where you can find all the resized artifacts that yuo can use on your mobile apps.
+Et voilà, now you can find two new folders, named "iOS" and "Android", where you can find all the resized artifacts that you can use on your mobile apps:
+
+![image](https://user-images.githubusercontent.com/139274/39707903-f3177cae-5215-11e8-9824-8b18def4fc71.png)
 
 ## License
 My code is licensed with the M.I.T. License and because I use the ImageMagick library to open, resize and save images, please take note also of their license, both available at the root of this project.
