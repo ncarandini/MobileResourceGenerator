@@ -13,21 +13,11 @@ namespace TPCWare.MobileResourcesGenerator.ConsoleApp
             string sourceRootDir = (args.Length > 1) ? Path.GetFullPath(args[1]) : Path.GetFullPath("./");
             string targetRootDir = (args.Length > 2) ? Path.GetFullPath(args[2]) : sourceRootDir;
 
-            // Create the out folders structure if not already present
-            Directory.CreateDirectory($"{targetRootDir}/iOS");
-            Directory.CreateDirectory($"{targetRootDir}/iOS/Resources");
-            Directory.CreateDirectory($"{targetRootDir}/Android");
-            Directory.CreateDirectory($"{targetRootDir}/Android/Resources");
-            Directory.CreateDirectory($"{targetRootDir}/Android/Resources/drawable");
-            Directory.CreateDirectory($"{targetRootDir}/Android/Resources/drawable-hdpi");
-            Directory.CreateDirectory($"{targetRootDir}/Android/Resources/drawable-xhdpi");
-            Directory.CreateDirectory($"{targetRootDir}/Android/Resources/drawable-xxhdpi");
-            Directory.CreateDirectory($"{targetRootDir}/Android/Resources/drawable-xxxhdpi");
-
             Console.WriteLine($"Source dir: {sourceRootDir}");
 
             if (!string.IsNullOrWhiteSpace(sourceFileName))
             {
+                CreatefolderStructure(targetRootDir);
                 Console.WriteLine($"Generating resource for image {sourceFileName} :");
                 GenerateResources($"{sourceRootDir}/{sourceFileName}", targetRootDir);
             }
@@ -41,6 +31,7 @@ namespace TPCWare.MobileResourcesGenerator.ConsoleApp
                 }
                 else
                 {
+                    CreatefolderStructure(targetRootDir);
                     foreach (var filePath in filePaths)
                     {
                         Console.WriteLine($"Generating resource for image {filePath.Replace("\\", "/")} :");
@@ -51,6 +42,18 @@ namespace TPCWare.MobileResourcesGenerator.ConsoleApp
 
             Console.Write("Hit a key to terminate...");
             Console.ReadKey();
+        }
+
+        private static void CreatefolderStructure(string targetRootDir)
+        {
+            // Create the out folders structure if not already present
+            Directory.CreateDirectory($"{targetRootDir}/iOS");
+            Directory.CreateDirectory($"{targetRootDir}/Android");
+            Directory.CreateDirectory($"{targetRootDir}/Android/drawable");
+            Directory.CreateDirectory($"{targetRootDir}/Android/drawable-hdpi");
+            Directory.CreateDirectory($"{targetRootDir}/Android/drawable-xhdpi");
+            Directory.CreateDirectory($"{targetRootDir}/Android/drawable-xxhdpi");
+            Directory.CreateDirectory($"{targetRootDir}/Android/drawable-xxxhdpi");
         }
 
         private static void GenerateResources(string sourceFilePath, string targetRootDir)
@@ -94,28 +97,28 @@ namespace TPCWare.MobileResourcesGenerator.ConsoleApp
                 switch (toResolution)
                 {
                     case Resolution.Pixel:
-                        targetFilepath = $"{targetRootDir}/iOS/Resources/{sourceFileName}";
+                        targetFilepath = $"{targetRootDir}iOS/{sourceFileName}";
                         break;
                     case Resolution.Pixel2:
-                        targetFilepath = $"{targetRootDir}/iOS/Resources/{sourceFileNameWithoutExtension}@2x{sourceFileNameExtension}";
+                        targetFilepath = $"{targetRootDir}iOS/{sourceFileNameWithoutExtension}@2x{sourceFileNameExtension}";
                         break;
                     case Resolution.Pixel3:
-                        targetFilepath = $"{targetRootDir}/iOS/Resources/{sourceFileNameWithoutExtension}@3x{sourceFileNameExtension}";
+                        targetFilepath = $"{targetRootDir}iOS/{sourceFileNameWithoutExtension}@3x{sourceFileNameExtension}";
                         break;
                     case Resolution.Mdpi:
-                        targetFilepath = $"{targetRootDir}/Android/Resources/drawable/{sourceFileName}";
+                        targetFilepath = $"{targetRootDir}Android/drawable/{sourceFileName}";
                         break;
                     case Resolution.Hdpi:
-                        targetFilepath = $"{targetRootDir}/Android/Resources/drawable-hdpi/{sourceFileName}";
+                        targetFilepath = $"{targetRootDir}Android/drawable-hdpi/{sourceFileName}";
                         break;
                     case Resolution.Xhdpi:
-                        targetFilepath = $"{targetRootDir}/Android/Resources/drawable-xhdpi/{sourceFileName}";
+                        targetFilepath = $"{targetRootDir}Android/drawable-xhdpi/{sourceFileName}";
                         break;
                     case Resolution.Xxhdpi:
-                        targetFilepath = $"{targetRootDir}/Android/Resources/drawable-xxhdpi/{sourceFileName}";
+                        targetFilepath = $"{targetRootDir}Android/drawable-xxhdpi/{sourceFileName}";
                         break;
                     case Resolution.Xxxhdpi:
-                        targetFilepath = $"{targetRootDir}/Android/Resources/drawable-xxxhdpi/{sourceFileName}";
+                        targetFilepath = $"{targetRootDir}Android/drawable-xxxhdpi/{sourceFileName}";
                         break;
                     default:
                         throw new ArgumentException();
@@ -123,7 +126,7 @@ namespace TPCWare.MobileResourcesGenerator.ConsoleApp
 
                 sourceImage.Write(targetFilepath);
 
-                Console.WriteLine($"'-- {targetFilepath}");
+                Console.WriteLine($"'-- {targetFilepath.Replace("\\", "/")}");
             }
         }
 
