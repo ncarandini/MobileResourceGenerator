@@ -9,9 +9,11 @@ So the best way to operate when creating artifacts is to use vector images as mu
 
 But when creating the app, with Xamarin or Android Studio or Apple XCode or whatever else, at the end of the day we need bitmap artifacts (tipically PNG files) on many different dimensions. So for each "source" artifact, we need a lot of resized artifact to put on Android drawable resources and iOS image collections.
 
-To create those artifacts, I use an Excel file that I've made to calculate the pixel sizes starting from iOS DPs and for your convenience I've put a copy of it in the "DP Calulator" folder of this project.
+To create those artifacts, I use an Excel file that I've made to calculate the pixel sizes starting from iOS DPs and for your convenience I've put a copy of it in the "DP Calulator" folder of this project:
 
-To ease the production of resized ertifacts, I've developed a simple console app that starting from a XXXHPDI image (the biggest one) produces all the other images, for iOS (image, image@2x, image@3x) and Android (on filders "drawable", "drawable-hdpi", ..., "drawable-xxxhdpi").
+![image](https://user-images.githubusercontent.com/139274/39708731-3fe842f0-5218-11e8-95ca-3840573f7505.png)
+
+To ease the production of resized artifacts, I've developed a simple console app that starting from a XXXHPDI image (the biggest one) produces all the other images, for iOS (image, image@2x, image@3x) and Android (on filders "drawable", "drawable-hdpi", ..., "drawable-xxxhdpi").
 
 ## Install
 1. Create a folder in your PC (i.e. c:\Moregen) and copy there the two files from the "Console App" folder of this project:
@@ -45,4 +47,4 @@ Et voilà, now you can find two new folders, named "iOS" and "Android", where yo
 ![image](https://user-images.githubusercontent.com/139274/39707903-f3177cae-5215-11e8-9824-8b18def4fc71.png)
 
 ## License
-My code is licensed with the M.I.T. License and because I use the ImageMagick library to open, resize and save images, please take note also of their license, both available at the root of this project.
+My code is licensed with the MIT License and because I use the ImageMagick library to open, resize and save images, please take note also of their license, both available at the root of this project.
