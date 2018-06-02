@@ -12,6 +12,7 @@
 
 using ImageMagick;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -19,15 +20,41 @@ namespace TPCWare.MobileResourcesGenerator.ConsoleApp
 {
     class Program
     {
+        static bool appIconGeneration;
+
         static void Main(string[] args)
         {
+            appIconGeneration = CheckforAppIconGeneration(ref args);
             string sourceFileName = (args.Length > 0) ? Path.GetFileName(args[0]) : string.Empty;
             string sourceRootDir = (args.Length > 1) ? Path.GetFullPath(args[1]) : Path.GetFullPath("./");
             string targetRootDir = (args.Length > 2) ? Path.GetFullPath(args[2]) : sourceRootDir;
 
             Console.WriteLine($"Source dir: {sourceRootDir}");
 
-            if (!string.IsNullOrWhiteSpace(sourceFileName))
+            if (appIconGeneration)
+            {
+                if (string.IsNullOrWhiteSpace(sourceFileName))
+                {
+                    var filePaths = Directory.EnumerateFiles(sourceRootDir, "*.png");
+                    if (filePaths.Count() == 1)
+                    {
+                        sourceFileName = Path.GetFileName(filePaths.First());
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(sourceFileName))
+                {
+                    CreatefolderStructure(targetRootDir);
+                    Directory.CreateDirectory($"{targetRootDir}/iOS/AppIcon");
+                    Console.WriteLine($"Generating App icon for image {sourceFileName} :");
+                    GenerateAppIcon($"{sourceRootDir}/{sourceFileName}", targetRootDir);
+                }
+                else
+                {
+                    Console.WriteLine("Cannot generate App icon: please specify source filename.");
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(sourceFileName))
             {
                 CreatefolderStructure(targetRootDir);
                 Console.WriteLine($"Generating resource for image {sourceFileName} :");
@@ -54,6 +81,19 @@ namespace TPCWare.MobileResourcesGenerator.ConsoleApp
 
             Console.Write("Hit a key to terminate...");
             Console.ReadKey();
+        }
+
+        private static bool CheckforAppIconGeneration(ref string[] args)
+        {
+            bool result = false;
+            List<string> cmds = args.ToList();
+            if (cmds.Any(cmd => cmd == "-ai"))
+            {
+                result = true;
+                cmds.RemoveAll(cmd => cmd == "-ai");
+                args = cmds.ToArray();
+            }
+            return result;
         }
 
         private static void CreatefolderStructure(string targetRootDir)
@@ -138,6 +178,48 @@ namespace TPCWare.MobileResourcesGenerator.ConsoleApp
 
                 sourceImage.Write(targetFilepath);
 
+                Console.WriteLine($"'-- {targetFilepath.Replace("\\", "/")}");
+            }
+        }
+
+        private static void GenerateAppIcon(string sourceFilePath, string targetRootDir)
+        {
+            if (!File.Exists(sourceFilePath))
+            {
+                Console.WriteLine("File not found");
+            }
+            else
+            {
+                // Create iOS app icons
+                MakeNewImage(sourceFilePath, 20, targetRootDir);
+                MakeNewImage(sourceFilePath, 29, targetRootDir);
+                MakeNewImage(sourceFilePath, 40, targetRootDir);
+                MakeNewImage(sourceFilePath, 58, targetRootDir);
+                MakeNewImage(sourceFilePath, 60, targetRootDir);
+                MakeNewImage(sourceFilePath, 76, targetRootDir);
+                MakeNewImage(sourceFilePath, 80, targetRootDir);
+                MakeNewImage(sourceFilePath, 87, targetRootDir);
+                MakeNewImage(sourceFilePath, 120, targetRootDir);
+                MakeNewImage(sourceFilePath, 152, targetRootDir);
+                MakeNewImage(sourceFilePath, 167, targetRootDir);
+                MakeNewImage(sourceFilePath, 180, targetRootDir);
+            }
+        }
+
+        private static void MakeNewImage(string sourceFilePath, int iconWidth, string targetRootDir)
+        {
+            using (MagickImage sourceImage = new MagickImage(sourceFilePath))
+            {
+                MagickImageInfo sourceInfo = new MagickImageInfo(sourceFilePath);
+
+                sourceImage.Resize(iconWidth, iconWidth);
+
+                string sourceFileName = Path.GetFileName(sourceFilePath);
+                string sourceFileNameWithoutExtension = Path.GetFileNameWithoutExtension(sourceFileName);
+                string sourceFileNameExtension = Path.GetExtension(sourceFileName);
+
+                string targetFilepath = $"{targetRootDir}iOS/AppIcon/Icon{iconWidth.ToString()}.png";
+                sourceImage.Write(targetFilepath);
                 Console.WriteLine($"'-- {targetFilepath.Replace("\\", "/")}");
             }
         }
