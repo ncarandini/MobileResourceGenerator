@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27701.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TPCWare.MobileResourceGenerator.ConsoleApp", "TPCWare.MobileResourceGenerator.ConsoleApp\TPCWare.MobileResourceGenerator.ConsoleApp.csproj", "{981BB63A-473C-442C-B568-F2E2B93C43EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TPCWare.MobileResourceGenerator", "TPCWare.MobileResourceGenerator\TPCWare.MobileResourceGenerator.csproj", "{DF2E7157-6A2B-4046-BA18-A0D768393CEE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{981BB63A-473C-442C-B568-F2E2B93C43EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{981BB63A-473C-442C-B568-F2E2B93C43EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{981BB63A-473C-442C-B568-F2E2B93C43EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{981BB63A-473C-442C-B568-F2E2B93C43EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF2E7157-6A2B-4046-BA18-A0D768393CEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF2E7157-6A2B-4046-BA18-A0D768393CEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF2E7157-6A2B-4046-BA18-A0D768393CEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF2E7157-6A2B-4046-BA18-A0D768393CEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

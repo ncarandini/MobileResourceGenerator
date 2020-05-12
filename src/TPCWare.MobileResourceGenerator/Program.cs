@@ -11,23 +11,42 @@
 // under the License.
 
 using ImageMagick;
+using Microsoft.Extensions.FileProviders;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
-namespace TPCWare.MobileResourcesGenerator.ConsoleApp
+namespace TPCWare.MobileResourceGenerator
 {
     class Program
     {
         static bool appIconGeneration;
 
+        // To generate app icon:
+        //
+        // moregen --ai [<source_path>]
+        //
+        // Note:
+        // - the command must contain --ai or --appicon parameter.
+        // - the PNG file has to be at least 1024x1024 pixels.
+        // - if <source_path> is not declared, the current directory is used and must contain a single PNG file.
+        //
+        // To generate image assets (one for each PNG file contained in the source directory):
+        //
+        // moregen [<source_path> [<target_path>]]
+        //
+        // Note:
+        // if <source_path> is not declared, the current directory is used
+        // if <target_path> is not declared, the directory <source_path> is used
+
         static void Main(string[] args)
         {
             appIconGeneration = CheckforAppIconGeneration(ref args);
             string sourceFileName = (args.Length > 0) ? Path.GetFileName(args[0]) : string.Empty;
-            string sourceRootDir = (args.Length > 1) ? Path.GetFullPath(args[1]) : Path.GetFullPath("./");
-            string targetRootDir = (args.Length > 2) ? Path.GetFullPath(args[2]) : sourceRootDir;
+            string sourceRootDir = (args.Length > 0) ? Path.GetFullPath(args[0]) : Path.GetFullPath("./");
+            string targetRootDir = (args.Length > 1) ? Path.GetFullPath(args[1]) : sourceRootDir;
 
             Console.WriteLine($"Source dir: {sourceRootDir}");
 
@@ -44,20 +63,19 @@ namespace TPCWare.MobileResourcesGenerator.ConsoleApp
 
                 if (!string.IsNullOrWhiteSpace(sourceFileName))
                 {
-                    CreatefolderStructure(targetRootDir);
-                    Directory.CreateDirectory($"{targetRootDir}/iOS/AppIcon");
+                    CreateIconFolderStructure(targetRootDir);
                     Console.WriteLine($"Generating App icon for image {sourceFileName} :");
                     GenerateAppIcon($"{sourceRootDir}/{sourceFileName}", targetRootDir);
                 }
                 else
                 {
-                    Console.WriteLine("Cannot generate App icon: please specify source filename.");
+                    Console.WriteLine("Cannot generate App icon files: No source filename has been specified and the current directory contains zero or multiple PNG files.");
                 }
             }
             else if (!string.IsNullOrWhiteSpace(sourceFileName))
             {
-                CreatefolderStructure(targetRootDir);
-                Console.WriteLine($"Generating resource for image {sourceFileName} :");
+                CreateAssetsFolderStructure(targetRootDir);
+                Console.WriteLine($"Generating resources for image {sourceFileName} :");
                 GenerateResources($"{sourceRootDir}/{sourceFileName}", targetRootDir);
             }
             else
@@ -70,33 +88,47 @@ namespace TPCWare.MobileResourcesGenerator.ConsoleApp
                 }
                 else
                 {
-                    CreatefolderStructure(targetRootDir);
+                    CreateAssetsFolderStructure(targetRootDir);
+                    List<string> assets = new List<string>();
                     foreach (var filePath in filePaths)
                     {
                         Console.WriteLine($"Generating resource for image {filePath.Replace("\\", "/")} :");
                         GenerateResources(filePath, targetRootDir);
+                        assets.Add(Path.GetFileNameWithoutExtension(filePath));
                     }
+                    AddContentsJsonFile(assets);
                 }
             }
-
-            Console.Write("Hit a key to terminate...");
-            Console.ReadKey();
         }
 
         private static bool CheckforAppIconGeneration(ref string[] args)
         {
             bool result = false;
             List<string> cmds = args.ToList();
-            if (cmds.Any(cmd => cmd == "-ai"))
+            if (cmds.Any(cmd => cmd == "--appicon" || cmd == "--ai"))
             {
                 result = true;
-                cmds.RemoveAll(cmd => cmd == "-ai");
+                cmds.RemoveAll(cmd => cmd == "--appicon");
+                cmds.RemoveAll(cmd => cmd == "--ai");
                 args = cmds.ToArray();
             }
             return result;
         }
 
-        private static void CreatefolderStructure(string targetRootDir)
+        private static void CreateIconFolderStructure(string targetRootDir)
+        {
+            // Create the out folders structure if not already present
+            Directory.CreateDirectory($"{targetRootDir}/iOS");
+            Directory.CreateDirectory($"{targetRootDir}/iOS/AppIcon.appiconset");
+            Directory.CreateDirectory($"{targetRootDir}/Android");
+            Directory.CreateDirectory($"{targetRootDir}/Android/mipmap-mdpi");
+            Directory.CreateDirectory($"{targetRootDir}/Android/mipmap-hdpi");
+            Directory.CreateDirectory($"{targetRootDir}/Android/mipmap-xhdpi");
+            Directory.CreateDirectory($"{targetRootDir}/Android/mipmap-xxhdpi");
+            Directory.CreateDirectory($"{targetRootDir}/Android/mipmap-xxxhdpi");
+        }
+
+        private static void CreateAssetsFolderStructure(string targetRootDir)
         {
             // Create the out folders structure if not already present
             Directory.CreateDirectory($"{targetRootDir}/iOS");
@@ -108,6 +140,81 @@ namespace TPCWare.MobileResourcesGenerator.ConsoleApp
             Directory.CreateDirectory($"{targetRootDir}/Android/drawable-xxxhdpi");
         }
 
+        private static void GenerateAppIcon(string sourceFilePath, string targetRootDir)
+        {
+            if (!File.Exists(sourceFilePath))
+            {
+                Console.WriteLine("File not found");
+            }
+            else
+            {
+                // Create Apple icons 
+                MakeNewAppleIcon(sourceFilePath, 16, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 20, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 29, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 32, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 40, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 48, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 55, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 58, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 60, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 64, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 76, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 80, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 87, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 88, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 100, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 120, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 128, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 152, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 167, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 172, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 180, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 196, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 216, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 256, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 512, targetRootDir);
+                MakeNewAppleIcon(sourceFilePath, 1024, targetRootDir);
+
+                // Add content.json file
+                var manifestEmbeddedProvider = new ManifestEmbeddedFileProvider(typeof(Program).Assembly);
+                var fileInfo = manifestEmbeddedProvider.GetFileInfo("Data\\Contents.json");
+                using Stream stream = fileInfo.CreateReadStream();
+                using StreamReader sr = new StreamReader(stream);
+                var contentsJson = sr.ReadToEnd();
+                File.WriteAllText($"{targetRootDir}iOS\\AppIcon.appiconset\\Contents.json", contentsJson);
+
+                // Add Android Icons
+                MakeNewAndroidIcon(sourceFilePath, 48, $"{targetRootDir}Android\\mipmap-mdpi\\");
+                MakeNewAndroidIcon(sourceFilePath, 72, $"{targetRootDir}Android\\mipmap-hdpi\\");
+                MakeNewAndroidIcon(sourceFilePath, 96, $"{targetRootDir}Android\\mipmap-xhdpi\\");
+                MakeNewAndroidIcon(sourceFilePath, 144, $"{targetRootDir}Android\\mipmap-xxhdpi\\");
+                MakeNewAndroidIcon(sourceFilePath, 192, $"{targetRootDir}Android\\mipmap-xxxhdpi\\");
+            }
+        }
+
+        private static void MakeNewAppleIcon(string sourceFilePath, int iconWidth, string targetRootDir)
+        {
+            using (MagickImage sourceImage = new MagickImage(sourceFilePath))
+            {
+                sourceImage.Resize(iconWidth, iconWidth);
+                string targetFilepath = $"{targetRootDir}iOS\\AppIcon.appiconset\\Icon{iconWidth}.png";
+                sourceImage.Write(targetFilepath);
+                Console.WriteLine($"'-- {targetFilepath.Replace("\\", "/")}");
+            }
+        }
+
+        private static void MakeNewAndroidIcon(string sourceFilePath, int iconWidth, string targetRootDir)
+        {
+            using (MagickImage sourceImage = new MagickImage(sourceFilePath))
+            {
+                sourceImage.Resize(iconWidth, iconWidth);
+                string targetFilepath = $"{targetRootDir}icon.png";
+                sourceImage.Write(targetFilepath);
+                Console.WriteLine($"'-- {targetFilepath.Replace("\\", "/")}");
+            }
+        }
+
         private static void GenerateResources(string sourceFilePath, string targetRootDir)
         {
             if (!File.Exists(sourceFilePath))
@@ -117,9 +224,22 @@ namespace TPCWare.MobileResourcesGenerator.ConsoleApp
             else
             {
                 // Create iOS artifacts
+                string sourceFileNameWithoutExtension = Path.GetFileNameWithoutExtension(sourceFilePath);
+                string sourceFileNameExtension = Path.GetExtension(sourceFilePath);
+                string imageSetDir = $"{targetRootDir}iOS\\{sourceFileNameWithoutExtension}.imageset\\";
+                Directory.CreateDirectory(imageSetDir);
+                //Path.GetFileNameWithoutExtension(sourceFileName)
                 MakeNewImage(sourceFilePath, Resolution.Xxxhdpi, Resolution.Pixel, targetRootDir);
                 MakeNewImage(sourceFilePath, Resolution.Xxxhdpi, Resolution.Pixel2, targetRootDir);
                 MakeNewImage(sourceFilePath, Resolution.Xxxhdpi, Resolution.Pixel3, targetRootDir);
+                string contentsJson = $"{{\"images\":[{{\"filename\":\"{sourceFileNameWithoutExtension}{sourceFileNameExtension}\",";
+                contentsJson += $"\"scale\":\"1x\",\"idiom\":\"universal\"}},";
+                contentsJson += $"{{\"filename\":\"{sourceFileNameWithoutExtension}@2x{sourceFileNameExtension}\",";
+                contentsJson += $"\"scale\":\"2x\",\"idiom\":\"universal\"}},";
+                contentsJson += $"{{\"filename\":\"{sourceFileNameWithoutExtension}@3x{sourceFileNameExtension}\",";
+                contentsJson += $"\"scale\":\"3x\",\"idiom\":\"universal\"}}],";
+                contentsJson += $"\"info\":{{\"version\":1,\"author\":\"xcode\"}}}}";
+                File.WriteAllText($"{imageSetDir}Contents.json", contentsJson);
 
                 // Create Android artifacts
                 MakeNewImage(sourceFilePath, Resolution.Xxxhdpi, Resolution.Mdpi, targetRootDir);
@@ -149,13 +269,13 @@ namespace TPCWare.MobileResourcesGenerator.ConsoleApp
                 switch (toResolution)
                 {
                     case Resolution.Pixel:
-                        targetFilepath = $"{targetRootDir}iOS/{sourceFileName}";
+                        targetFilepath = $"{targetRootDir}iOS\\{sourceFileNameWithoutExtension}.imageset\\{sourceFileName}";
                         break;
                     case Resolution.Pixel2:
-                        targetFilepath = $"{targetRootDir}iOS/{sourceFileNameWithoutExtension}@2x{sourceFileNameExtension}";
+                        targetFilepath = $"{targetRootDir}iOS\\{sourceFileNameWithoutExtension}.imageset\\{sourceFileNameWithoutExtension}@2x{sourceFileNameExtension}";
                         break;
                     case Resolution.Pixel3:
-                        targetFilepath = $"{targetRootDir}iOS/{sourceFileNameWithoutExtension}@3x{sourceFileNameExtension}";
+                        targetFilepath = $"{targetRootDir}iOS\\{sourceFileNameWithoutExtension}.imageset\\{sourceFileNameWithoutExtension}@3x{sourceFileNameExtension}";
                         break;
                     case Resolution.Mdpi:
                         targetFilepath = $"{targetRootDir}Android/drawable/{sourceFileName}";
@@ -178,56 +298,25 @@ namespace TPCWare.MobileResourcesGenerator.ConsoleApp
 
                 sourceImage.Write(targetFilepath);
 
-                Console.WriteLine($"'-- {targetFilepath.Replace("\\", "/")}");
+                Console.WriteLine($"--> {targetFilepath.Replace("\\", "/")}");
             }
         }
 
-        private static void GenerateAppIcon(string sourceFilePath, string targetRootDir)
+        private static void AddContentsJsonFile(List<string> assets)
         {
-            if (!File.Exists(sourceFilePath))
+            StringBuilder sb = new StringBuilder();
+            foreach (var asset in assets)
             {
-                Console.WriteLine("File not found");
+                // TODO
             }
-            else
-            {
-                // Create iOS app icons
-                MakeNewImage(sourceFilePath, 20, targetRootDir);
-                MakeNewImage(sourceFilePath, 29, targetRootDir);
-                MakeNewImage(sourceFilePath, 40, targetRootDir);
-                MakeNewImage(sourceFilePath, 58, targetRootDir);
-                MakeNewImage(sourceFilePath, 60, targetRootDir);
-                MakeNewImage(sourceFilePath, 76, targetRootDir);
-                MakeNewImage(sourceFilePath, 80, targetRootDir);
-                MakeNewImage(sourceFilePath, 87, targetRootDir);
-                MakeNewImage(sourceFilePath, 120, targetRootDir);
-                MakeNewImage(sourceFilePath, 152, targetRootDir);
-                MakeNewImage(sourceFilePath, 167, targetRootDir);
-                MakeNewImage(sourceFilePath, 180, targetRootDir);
-            }
-        }
 
-        private static void MakeNewImage(string sourceFilePath, int iconWidth, string targetRootDir)
-        {
-            using (MagickImage sourceImage = new MagickImage(sourceFilePath))
-            {
-                MagickImageInfo sourceInfo = new MagickImageInfo(sourceFilePath);
-
-                sourceImage.Resize(iconWidth, iconWidth);
-
-                string sourceFileName = Path.GetFileName(sourceFilePath);
-                string sourceFileNameWithoutExtension = Path.GetFileNameWithoutExtension(sourceFileName);
-                string sourceFileNameExtension = Path.GetExtension(sourceFileName);
-
-                string targetFilepath = $"{targetRootDir}iOS/AppIcon/Icon{iconWidth.ToString()}.png";
-                sourceImage.Write(targetFilepath);
-                Console.WriteLine($"'-- {targetFilepath.Replace("\\", "/")}");
-            }
+            // TODO: save the file
         }
 
         private static int PixelConverter(int fromValue, Resolution fromResolution, Resolution toResolution)
         {
-            double toValue = 0;
-            double androidDpiValue = 0;
+            double toValue;
+            double androidDpiValue;
             switch (fromResolution)
             {
                 case Resolution.Pixel:
@@ -291,17 +380,4 @@ namespace TPCWare.MobileResourcesGenerator.ConsoleApp
             return Convert.ToInt32(Math.Round(toValue));
         }
     }
-
-    enum Resolution
-    {
-        Pixel,
-        Pixel2,
-        Pixel3,
-        Mdpi,
-        Hdpi,
-        Xhdpi,
-        Xxhdpi,
-        Xxxhdpi
-    }
 }
-
