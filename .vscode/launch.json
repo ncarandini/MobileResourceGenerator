@@ -10,11 +10,11 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/TPCWare.MobileResourceGenerator/bin/Debug/netcoreapp3.1/TPCWare.MobileResourceGenerator.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/src/TPCWare.MobileResourceGenerator",
+            "program": "${workspaceFolder}/src/TPCWare.ResourceIncludeGenerator/bin/Debug/netcoreapp3.1/TPCWare.ResourceIncludeGenerator.dll",
+            "args": ["/Users/nick/Git/Hubigloo/Hubigloo.ClientApp.Android"],
+            "cwd": "${workspaceFolder}/src/TPCWare.ResourceIncludeGenerator",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
-            "console": "internalConsole",
+            "console": "externalTerminal",
             "stopAtEntry": false
         },
         {
