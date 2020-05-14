@@ -59,14 +59,22 @@ namespace TPCWare.ResourceIncludeGenerator
         // Insert logic for processing found files here.
         public static void ProcessFile(string path)
         {
-            Console.WriteLine("Processed file '{0}'.", path);
-            string subPath = path.Replace(sourceRootDir, "").Trim();
-            if (!string.IsNullOrWhiteSpace(subPath) && (subPath.StartsWith("/") || subPath.StartsWith("\\")))
+            if (path.Contains(".DS_Store"))
             {
-                subPath = subPath.Substring(1);
+                Console.WriteLine($"File '{path}' skipped.");
             }
-            subPath = subPath.Replace("/", "\\");
-            resourceSubPaths.Add(subPath);
+            else
+            {
+                string subPath = path.Replace(sourceRootDir, "").Trim();
+                if (!string.IsNullOrWhiteSpace(subPath) && (subPath.StartsWith("/") || subPath.StartsWith("\\")))
+                {
+                    subPath = subPath.Substring(1);
+                }
+                subPath = subPath.Replace("/", "\\");
+                resourceSubPaths.Add(subPath); 
+
+                Console.WriteLine($"File '{path}' added.");
+            }
         }
 
     }  
