@@ -208,8 +208,10 @@ namespace TPCWare.MobileResourceGenerator
         {
             using (MagickImage sourceImage = new MagickImage(sourceFilePath))
             {
+                string sourceFileName = Path.GetFileName(sourceFilePath);
+
                 sourceImage.Resize(iconWidth, iconWidth);
-                string targetFilepath = $"{targetRootDir}icon.png";
+                string targetFilepath = $"{targetRootDir}{sourceFileName}";
                 sourceImage.Write(targetFilepath);
                 Console.WriteLine($"'-- {targetFilepath.Replace("\\", "/")}");
             }
